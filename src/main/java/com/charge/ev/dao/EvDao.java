@@ -7,6 +7,5 @@ import com.charge.ev.entries.Entries;
 
 @Repository
 public interface EvDao extends CrudRepository<Entries, String> {
-	public Entries findByUsernameAndPassword(String username, String password);
-    
+    Entries findByUsernameAndPassword(String username, String password);
 }
