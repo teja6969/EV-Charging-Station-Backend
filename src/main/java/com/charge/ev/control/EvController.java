@@ -1,5 +1,7 @@
 package com.charge.ev.control;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,17 @@ public class EvController {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+        }
+    }
+    @PostMapping("/registration")
+    public ResponseEntity<?> registration(@RequestBody Entries register){
+    	
+    	//Entries user = evService.registerService(register.getUsername(), register.getPassword(), register.getEmail(), register.getRole(), register.getCreatedAt(), register.getPhone());
+    	if (evService.registercheck(register.getUsername()) == true) {
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UserID is already EXIST's");
+        } else {
+        	evService.registerService(register);
+        	return ResponseEntity.status(HttpStatus.OK).body("User is Registered Successfully");
         }
     }
 }

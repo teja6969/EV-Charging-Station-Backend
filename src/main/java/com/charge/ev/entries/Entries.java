@@ -22,8 +22,18 @@ public class Entries {
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(unique = true, nullable = false)
+    private long phone;
+    
+    public long getPhone() {
+		return phone;
+	}
 
-    public String getUsername() {
+	public void setPhone(long phone) {
+		this.phone = phone;
+	}
+
+	public String getUsername() {
         return username;
     }
 
@@ -60,12 +70,8 @@ public class Entries {
     }
 
     @Override
-    public String toString() {
-        return "Entries{" +
-                "username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
-    }
+	public String toString() {
+		return "Entries [username=" + username + ", password=" + password + ", email=" + email + ", role=" + role
+				+ ", createdAt=" + createdAt + ", phone=" + phone + "]";
+	}
 }
