@@ -1,18 +1,17 @@
 package com.charge.ev.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.charge.ev.dao.EvDao;
 import com.charge.ev.entries.Entries;
 
-@Component
+@Service
 public class EvService {
-@Autowired
- EvDao ed;
-	public Entries loginService(String username,String password) {
-		return ed.findByUsernameAndPassword(username,password);
-		
-	}
+    @Autowired
+    EvDao evDao;
 
+    public Entries loginService(String username, String password) {
+        return evDao.findByUsernameAndPassword(username, password);
+    }
 }
