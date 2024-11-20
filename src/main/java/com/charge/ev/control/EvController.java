@@ -1,13 +1,12 @@
 package com.charge.ev.control;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.charge.ev.entries.Entries;
+import com.charge.ev.entries.VendorDetails;
 import com.charge.ev.service.EvService;
 
 @RestController
@@ -36,4 +35,12 @@ public class EvController {
         	return ResponseEntity.status(HttpStatus.OK).body("User is Registered Successfully");
         }
     }
+    
+    @PostMapping("/vd")
+public ResponseEntity<?> vd(@RequestBody VendorDetails vd){
+
+    		evService.registerVendor(vd);
+        	return ResponseEntity.status(HttpStatus.OK).body("Vendor Registered Successfully with the ID: "+vd.getVendorid());
+        
+    } 
 }
