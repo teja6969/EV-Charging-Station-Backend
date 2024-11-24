@@ -1,15 +1,18 @@
 package com.charge.ev.entries;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "vd")
@@ -21,8 +24,6 @@ public class VendorDetails {
 	 	@SequenceGenerator(name = "id_gen",initialValue = 1,allocationSize = 1,sequenceName = "idgen")
 	 	private long vendori;
 	 	
-
-		//@Id
 	 	@Column
 	 	private String vendorid;
 	 	
@@ -62,7 +63,18 @@ public class VendorDetails {
 	    @Column(unique = true, nullable = false)
 	    private String email;
 
-	    public long getVendori() {
+	    @OneToMany(mappedBy = "vendori", cascade = CascadeType.ALL)
+	    public List<SlotType> sl;
+	    
+	    public List<SlotType> getSl() {
+			return sl;
+		}
+
+		public void setSl(List<SlotType> sl) {
+			this.sl = sl;
+		}
+
+		public long getVendori() {
 			return vendori;
 		}
 
@@ -72,9 +84,10 @@ public class VendorDetails {
 		public String getVendorid() {
 			return vendorid;
 		}
-
-		public void setVendorid(String vendorid) {
-			this.vendorid = vendorid;
+		
+		@PrePersist
+		public void setVendorid() {
+			this.vendorid = "EV00"+vendori;
 		}
 
 		public String getVendorName() {
