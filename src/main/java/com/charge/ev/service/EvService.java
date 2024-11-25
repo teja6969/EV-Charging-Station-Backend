@@ -1,11 +1,14 @@
 package com.charge.ev.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.charge.ev.dao.EvDao;
 import com.charge.ev.dao.VendorDao;
 import com.charge.ev.entries.Entries;
+import com.charge.ev.entries.SlotType;
 import com.charge.ev.entries.VendorDetails;
 
 @Service
@@ -30,9 +33,18 @@ public class EvService {
 	}
 
 	public VendorDetails registerVendor(VendorDetails vd) {
-		long id=vdao.findmax();
-		System.out.println("max id"+id);
-		vd.setVendorid("EV00"+id);
+		//long id=vdao.findmax();
+		
+		//vd.setVendorid("EV00"+vd.getVendori());
+		
+		List<SlotType> slotTypes = vd.getSl();
+		if (slotTypes != null) {
+            for (SlotType slotType : slotTypes) {
+                slotType.setVendori(vd);
+            }
+        }
+		
+		System.out.println(slotTypes);
 		return vdao.save(vd);
 		
 	}

@@ -37,7 +37,7 @@ public class EvController {
     }
     
     @PostMapping("/vd")
-public ResponseEntity<?> vd(@RequestBody VendorDetails vd){
+    public ResponseEntity<?> vd(@RequestBody VendorDetails vd){
 
     		evService.registerVendor(vd);
         	return ResponseEntity.status(HttpStatus.OK).body("Vendor Registered Successfully with the ID: "+vd.getVendorid());
