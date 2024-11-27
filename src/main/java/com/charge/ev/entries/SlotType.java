@@ -1,5 +1,7 @@
 package com.charge.ev.entries;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,17 +19,18 @@ public class SlotType {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name="vendori")
-	private VendorDetails vendori;
+	@JoinColumn(name="stationID")
+	@JsonBackReference
+	private VendorDetails stationID;
 	
 	@Column
 	private String slotType;
 	
-	public VendorDetails getVendori() {
-		return vendori;
+	public VendorDetails getstationID() {
+		return stationID;
 	}
-	public void setVendori(VendorDetails vendori) {
-		this.vendori = vendori;
+	public void setstationID(VendorDetails stationID) {
+		this.stationID = stationID;
 	}
 	public String getSlotType() {
 		return slotType;
@@ -37,6 +40,6 @@ public class SlotType {
 	}
 	@Override
 	public String toString() {
-		return "SlotType [vendori=" + vendori + ", slotType="+slotType+"]";
+		return "SlotType [stationID=" + stationID + ", slotType="+slotType+"]";
 	}
 }

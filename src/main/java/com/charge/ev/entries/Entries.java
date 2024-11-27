@@ -8,7 +8,17 @@ import java.time.LocalDateTime;
 @Component
 @Entity
 public class Entries {
+	
     @Id
+    @Column
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "id_register")
+ 	@SequenceGenerator(name = "id_register",initialValue = 1,allocationSize = 1,sequenceName = "id_register")
+    private long id;
+
+	@Column(unique = true, nullable = false)
+    private String userId; 
+    
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -68,10 +78,32 @@ public class Entries {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+    
+    public long getId() {
+  		return id;
+  	}
 
-    @Override
+  	public void setId(long id) {
+  		this.id = id;
+  	}
+
+  	public String getUserId() {
+  		return userId;
+  	}
+
+  	@PrePersist
+  	public void setUserId() {
+  		 // Generate userId based on role and sequence ID
+        if ("V".equalsIgnoreCase(this.role)) {
+            this.userId = String.format("EVD%03d", this.id);
+        } else if ("U".equalsIgnoreCase(this.role)) {
+            this.userId = String.format("EV%03d", this.id);
+        } 
+  	}
+
+	@Override
 	public String toString() {
-		return "Entries [username=" + username + ", password=" + password + ", email=" + email + ", role=" + role
-				+ ", createdAt=" + createdAt + ", phone=" + phone + "]";
+		return "Entries [id=" + id + ", userId=" + userId + ", username=" + username + ", password=" + password
+				+ ", email=" + email + ", role=" + role + ", createdAt=" + createdAt + ", phone=" + phone + "]";
 	}
 }

@@ -1,6 +1,7 @@
 package com.charge.ev.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class EvService {
     @Autowired
     VendorDao vdao;
     
-    public Entries loginService(String username, String password) {
-        return evDao.findByUsernameAndPassword(username, password);
+    public Entries loginService(String email, String password) {
+        return evDao.findByEmailAndPassword(email, password);
     }
 
 	public Entries registerService(Entries register) {
@@ -28,8 +29,8 @@ public class EvService {
 		System.out.println("register");
 		return evDao.save(register);
 	}
-	public boolean registercheck(String username) {
-		return evDao.existsById(username);
+	public String registercheck(String email) {
+		return evDao.existsByEmail(email);
 	}
 
 	public VendorDetails registerVendor(VendorDetails vd) {
@@ -40,12 +41,20 @@ public class EvService {
 		List<SlotType> slotTypes = vd.getSl();
 		if (slotTypes != null) {
             for (SlotType slotType : slotTypes) {
-                slotType.setVendori(vd);
+                slotType.setstationID(vd);
             }
         }
 		
 		System.out.println(slotTypes);
 		return vdao.save(vd);
+		
+	}
+
+
+
+	public Optional<VendorDetails> vdupdateretrieve(String a) {
+		// TODO Auto-generated method stub
+		return vdao.findByVendorid(a);
 		
 	}
 }
