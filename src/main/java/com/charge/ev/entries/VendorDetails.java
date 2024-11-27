@@ -3,6 +3,8 @@ package com.charge.ev.entries;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -20,16 +21,13 @@ public class VendorDetails {
 
 	 	@Id
 	    @Column
-	 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "id_gen")
-	 	@SequenceGenerator(name = "id_gen",initialValue = 1,allocationSize = 1,sequenceName = "idgen")
-	 	private long vendori;
+	 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "Sid_gen")
+	 	@SequenceGenerator(name = "Sid_gen",initialValue = 1,allocationSize = 1,sequenceName = "Sdgen")
+	 	private long stationID;
 	 	
 	 	@Column
 	 	private String vendorid;
 	 	
-	    @Column(nullable = false)
-	    private String vendorName;
-
 	    @Column(nullable = false)
 	    private String stationName;
 
@@ -63,7 +61,8 @@ public class VendorDetails {
 	    @Column(unique = true, nullable = false)
 	    private String email;
 
-	    @OneToMany(mappedBy = "vendori", cascade = CascadeType.ALL)
+	    @OneToMany(mappedBy = "stationID", cascade = CascadeType.ALL)
+	    @JsonManagedReference
 	    public List<SlotType> sl;
 	    
 	    public List<SlotType> getSl() {
@@ -74,28 +73,20 @@ public class VendorDetails {
 			this.sl = sl;
 		}
 
-		public long getVendori() {
-			return vendori;
+		public long getstationID() {
+			return stationID;
 		}
 
-		public void setVendori(long vendori) {
-			this.vendori = vendori;
+		public void setstationID(long stationID) {
+			this.stationID = stationID;
 		}
 		public String getVendorid() {
 			return vendorid;
 		}
 		
-		@PrePersist
-		public void setVendorid() {
-			this.vendorid = "EV00"+vendori;
-		}
-
-		public String getVendorName() {
-			return vendorName;
-		}
-
-		public void setVendorName(String vendorName) {
-			this.vendorName = vendorName;
+		//@PrePersist
+		public void setVendorid(String vendorid) {
+			this.vendorid = vendorid;
 		}
 
 		public String getStationName() {
@@ -188,10 +179,9 @@ public class VendorDetails {
 
 		@Override
 		public String toString() {
-			return "VendorDetails [vendorid=" + vendorid + ", vendorName=" + vendorName + ", stationName=" + stationName
+			return "VendorDetails [stationID=" + stationID + ", vendorid=" + vendorid + ", stationName=" + stationName
 					+ ", pincode=" + pincode + ", city=" + city + ", landmark=" + landmark + ", state=" + state
 					+ ", slot=" + slot + ", capacity=" + capacity + ", vType=" + vType + ", createdAt=" + createdAt
 					+ ", phone=" + phone + ", email=" + email + "]";
 		}
-	    
 }
