@@ -23,26 +23,32 @@ public class EvController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Entries loginRequest) {
-        Entries user = evService.loginService(loginRequest.getEmail(), loginRequest.getPassword());
+    	Entries user = evService.loginService(loginRequest.getEmail(), loginRequest.getPassword());
         if (user != null) {
-            return new ResponseEntity<String>("User Logged in Successfully", HttpStatus.OK);
+            return ResponseEntity.ok(user);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            		.header("Content-Type", "application/json")
+            		.body("{\"message\": \"Invalid username or password.\"}");
         }
     }
+    
+
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody Entries register){
-    	System.out.println(register.toString());
-    	
-    	//Entries user = evService.registerService(register.getUsername(), register.getPassword(), register.getEmail(), register.getRole(), register.getCreatedAt(), register.getPhone());
-    	if (evService.registercheck(register.getEmail()) != null) {
-    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UserID is already EXIST's");
-        } else {
-        	
+    public ResponseEntity<?> registration(@RequestBody Entries register) {
+        if (evService.registercheck(register.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .header("Content-Type", "application/json")
+                    .body("{\"message\": \"UserID already exists\"}");
+        } else {      	
         	evService.registerService(register);
         	userid=register.getUserId();
         	email=register.getEmail();
-        	return ResponseEntity.status(HttpStatus.OK).body("User is Registered Successfully");
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("Content-Type", "application/json")
+                    .body("{\"message\": \"User is registered successfully\"}"); 
+
         }
     }
     
