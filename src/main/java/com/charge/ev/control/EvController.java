@@ -20,6 +20,7 @@ public class EvController {
     
     String userid;
     String email;
+    long stationid;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Entries loginRequest) {
@@ -60,12 +61,28 @@ public class EvController {
     @GetMapping("/vupdateretrieve")
     public Optional<VendorDetails> vupdateretrieve(@RequestBody Map<String,Object> ve) {
 		String vendorid=(String) ve.get("vendorid");
-		//long vendoridnew=Long.parseLong(vendorid.substring(4));
-		
-		//Optional<VendorDetails> v=evService.vdupdateretrieve(vendoridnew);
-		//System.out.println(v.toString());
-		
+		VendorDetails vd=evService.vdupdateretrieve(vendorid).get();
+		this.stationid =  vd.getstationID();
     	return evService.vdupdateretrieve(vendorid);
-    	
     }
+    
+    @PutMapping("/vupdate")
+    public ResponseEntity<String> vupdate(@RequestBody VendorDetails vu) {
+    	VendorDetails vd=evService.vupdate(stationid).get();
+    	vd.setCapacity(vu.getCapacity());
+    	vd.setCity(vu.getCity());
+    	vd.setStationName(vu.getStationName());
+    	vd.setPhone(vu.getPincode());
+    	vd.setLandmark(vu.getLandmark());
+    	vd.setState(vu.getState());
+    	vd.setSlot(vu.getSlot());
+    	vd.setvType(vu.getvType());
+    	vd.setPhone(vu.getPhone());
+    	vd.setEmail(vu.getEmail());
+    	vd.setSl(vu.getSl());
+    	vd.setVendorid(vu.getVendorid());
+    	evService.vupdatedeatils(vd);
+    	return new ResponseEntity<String>("Updated successfully",HttpStatus.OK);
+    }
+    
 }
