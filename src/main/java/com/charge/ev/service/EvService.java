@@ -34,10 +34,7 @@ public class EvService {
 	}
 
 	public VendorDetails registerVendor(VendorDetails vd) {
-		//long id=vdao.findmax();
-		
-		//vd.setVendorid("EV00"+vd.getVendori());
-		
+			
 		List<SlotType> slotTypes = vd.getSl();
 		if (slotTypes != null) {
             for (SlotType slotType : slotTypes) {
@@ -56,5 +53,12 @@ public class EvService {
 		// TODO Auto-generated method stub
 		return vdao.findByVendorid(a);
 		
+	}
+	public Optional<VendorDetails> vupdate(long id) {
+		return vdao.findById(id);
+	}
+	
+	public VendorDetails vupdatedeatils(VendorDetails vd) {
+		return vdao.save(vd);
 	}
 }
