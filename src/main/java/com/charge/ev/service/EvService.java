@@ -54,7 +54,7 @@ public class EvService {
 
 
 
-	public Optional<VendorDetails> vdupdateretrieve(String a) {
+	public List<VendorDetails> vdupdateretrieve(String a) {
 		// TODO Auto-generated method stub
 		return vdao.findByVendorid(a);
 		
