@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.charge.ev.entries.Entries;
-import com.charge.ev.entries.SlotType;
 import com.charge.ev.entries.VendorDetails;
 import com.charge.ev.service.EvService;
 
@@ -69,11 +68,10 @@ public class EvController {
     }
     
     @GetMapping("/retriveVendorStationDetails")
-    public Optional<VendorDetails> vupdateretrieve(@RequestBody Map<String,Object> ve) {
-		String vendorid=(String) ve.get("vendorid");
-		VendorDetails vd=evService.vdupdateretrieve(vendorid).get();
-		this.stationid =  vd.getstationID();
-    	return evService.vdupdateretrieve(vendorid);
+    public List<VendorDetails> vupdateretrieve() {
+		//String vendorid=(String) ve.get("vendorid");
+		//VendorDetails vd=evService.vdupdateretrieve(vendorid).get();
+    	return evService.vdupdateretrieve(userid);
     }
     
     @PutMapping("/updateVendorStationDetails")
@@ -93,7 +91,7 @@ public class EvController {
     	vd.setSl(vu.getSl());
     	vd.setVendorid(vu.getVendorid());
     	vd.setSl(vu.getSl());
-    	vd.setstationID(1);
+    	vd.setstationID(vu.getstationID());
     	
     	evService.vupdatedeatils(vd);
     	
