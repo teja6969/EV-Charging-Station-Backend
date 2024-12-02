@@ -30,39 +30,45 @@ public class EvController {
         if (user != null) {
         	userid=user.getUserId();
           	email=loginRequest.getEmail();
-            return new ResponseEntity<String>("User Logged in Successfully", HttpStatus.OK);
+            return ResponseEntity.ok(user);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            		.header("Content-Type", "application/json")
+            		.body("{\"message\": \"Invalid username or password.\"}");
         }
     }
+
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody Entries register){
-    	System.out.println(register.toString());
-    	
-    	//Entries user = evService.registerService(register.getUsername(), register.getPassword(), register.getEmail(), register.getRole(), register.getCreatedAt(), register.getPhone());
-    	if (evService.registercheck(register.getEmail()) != null) {
-    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UserID is already EXIST's");
-        } else {
-        	
+    public ResponseEntity<?> registration(@RequestBody Entries register) {
+        if (evService.registercheck(register.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .header("Content-Type", "application/json")
+                    .body("{\"message\": \"UserID already exists\"}");
+        } else {      	
         	evService.registerService(register);
         	userid=register.getUserId();
         	email=register.getEmail();
-        	return ResponseEntity.status(HttpStatus.OK).body("User is Registered Successfully");
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("Content-Type", "application/json")
+                    .body("{\"message\": \"User is registered successfully\"}"); 
+
         }
     }
-    
-    @PostMapping("/vd")
+
+    @PostMapping("/saveVendorStationDetails")
     public ResponseEntity<?> vd(@RequestBody VendorDetails vd){    	
     		if(userid.substring(0, 3).equals("EVD")) {
     			vd.setVendorid(userid);
     			vd.setEmail(email);
     		}
     		evService.registerVendor(vd);
-        	return ResponseEntity.status(HttpStatus.OK).body("Vendor station deatils added successfully");
-        
+        	return ResponseEntity.status(HttpStatus.OK)
+        			.header("Content-Type", "application/json")
+        			.body("{\"message\": \"Vendor station deatils added successfully\"}"); 
     }
     
-    @GetMapping("/vupdateretrieve")
+    @GetMapping("/retriveVendorStationDetails")
     public Optional<VendorDetails> vupdateretrieve(@RequestBody Map<String,Object> ve) {
 		String vendorid=(String) ve.get("vendorid");
 		VendorDetails vd=evService.vdupdateretrieve(vendorid).get();
@@ -70,7 +76,7 @@ public class EvController {
     	return evService.vdupdateretrieve(vendorid);
     }
     
-    @PutMapping("/vupdate")
+    @PutMapping("/updateVendorStationDetails")
     public ResponseEntity<String> vupdate(@RequestBody VendorDetails vu) {
     	VendorDetails vd=evService.vupdate(stationid).get();
     	evService.deleteSlottype(vd);
