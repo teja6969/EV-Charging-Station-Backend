@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.charge.ev.dao.EvDao;
+import com.charge.ev.dao.SlotDao;
 import com.charge.ev.dao.VendorDao;
 import com.charge.ev.entries.Entries;
 import com.charge.ev.entries.SlotType;
@@ -19,6 +21,9 @@ public class EvService {
 
     @Autowired
     VendorDao vdao;
+    
+    @Autowired
+    SlotDao sl;
     
     public Entries loginService(String email, String password) {
         return evDao.findByEmailAndPassword(email, password);
@@ -54,6 +59,8 @@ public class EvService {
 		return vdao.findByVendorid(a);
 		
 	}
+	
+	@Transactional
 	public Optional<VendorDetails> vupdate(long id) {
 		return vdao.findById(id);
 	}
@@ -61,4 +68,9 @@ public class EvService {
 	public VendorDetails vupdatedeatils(VendorDetails vd) {
 		return vdao.save(vd);
 	}
+	
+	public int deleteSlottype(VendorDetails v) {
+		return sl.deleteByStationID(v);
+	}
+	
 }

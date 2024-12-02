@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.charge.ev.entries.Entries;
 
 @Repository
-public interface EvDao extends CrudRepository<Entries, String> {
+public interface EvDao extends CrudRepository<Entries, Long> {
     Entries findByEmailAndPassword(String email, String password);
     
     @Query(value = "select e.email from entries e where e.email=?1",nativeQuery = true)

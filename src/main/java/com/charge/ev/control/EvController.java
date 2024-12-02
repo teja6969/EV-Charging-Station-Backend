@@ -1,5 +1,6 @@
 package com.charge.ev.control;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.charge.ev.entries.Entries;
+import com.charge.ev.entries.SlotType;
 import com.charge.ev.entries.VendorDetails;
 import com.charge.ev.service.EvService;
 
@@ -24,32 +26,28 @@ public class EvController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Entries loginRequest) {
-    	Entries user = evService.loginService(loginRequest.getEmail(), loginRequest.getPassword());
+        Entries user = evService.loginService(loginRequest.getEmail(), loginRequest.getPassword());
         if (user != null) {
-            return ResponseEntity.ok(user);
+        	userid=user.getUserId();
+          	email=loginRequest.getEmail();
+            return new ResponseEntity<String>("User Logged in Successfully", HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            		.header("Content-Type", "application/json")
-            		.body("{\"message\": \"Invalid username or password.\"}");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
         }
     }
-    
-
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody Entries register) {
-        if (evService.registercheck(register.getEmail()) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .header("Content-Type", "application/json")
-                    .body("{\"message\": \"UserID already exists\"}");
-        } else {      	
+    public ResponseEntity<?> registration(@RequestBody Entries register){
+    	System.out.println(register.toString());
+    	
+    	//Entries user = evService.registerService(register.getUsername(), register.getPassword(), register.getEmail(), register.getRole(), register.getCreatedAt(), register.getPhone());
+    	if (evService.registercheck(register.getEmail()) != null) {
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UserID is already EXIST's");
+        } else {
+        	
         	evService.registerService(register);
         	userid=register.getUserId();
         	email=register.getEmail();
-
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .header("Content-Type", "application/json")
-                    .body("{\"message\": \"User is registered successfully\"}"); 
-
+        	return ResponseEntity.status(HttpStatus.OK).body("User is Registered Successfully");
         }
     }
     
@@ -75,10 +73,11 @@ public class EvController {
     @PutMapping("/vupdate")
     public ResponseEntity<String> vupdate(@RequestBody VendorDetails vu) {
     	VendorDetails vd=evService.vupdate(stationid).get();
+    	evService.deleteSlottype(vd);
     	vd.setCapacity(vu.getCapacity());
     	vd.setCity(vu.getCity());
     	vd.setStationName(vu.getStationName());
-    	vd.setPhone(vu.getPincode());
+    	vd.setPincode(vu.getPincode());
     	vd.setLandmark(vu.getLandmark());
     	vd.setState(vu.getState());
     	vd.setSlot(vu.getSlot());
@@ -87,7 +86,11 @@ public class EvController {
     	vd.setEmail(vu.getEmail());
     	vd.setSl(vu.getSl());
     	vd.setVendorid(vu.getVendorid());
+    	vd.setSl(vu.getSl());
+    	vd.setstationID(1);
+    	
     	evService.vupdatedeatils(vd);
+    	
     	return new ResponseEntity<String>("Updated successfully",HttpStatus.OK);
     }
     
