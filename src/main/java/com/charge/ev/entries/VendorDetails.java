@@ -60,6 +60,12 @@ public class VendorDetails {
 	    
 	    @Column(unique = true, nullable = false)
 	    private String email;
+	    
+	    @Column(nullable = false)
+	    private double latitude;
+
+	    @Column(nullable = false)
+	    private double longitude;
 
 	    @OneToMany(mappedBy = "stationID", cascade = CascadeType.ALL)
 	    @JsonManagedReference
@@ -175,6 +181,22 @@ public class VendorDetails {
 
 		public void setEmail(String email) {
 			this.email = email;
+		}
+		
+		public double getLatitude() {
+		    return latitude;
+		}
+
+		public void setLatitude(double latitude) {
+		    this.latitude = latitude;
+		}
+
+		public double getLongitude() {
+		    return longitude;
+		}
+
+		public void setLongitude(double longitude) {
+		    this.longitude = longitude;
 		}
 
 		@Override
