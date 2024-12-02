@@ -29,6 +29,9 @@ public class VendorDetails {
 	 	private String vendorid;
 	 	
 	    @Column(nullable = false)
+	    private String vendorName;
+
+		@Column(nullable = false)
 	    private String stationName;
 
 	    @Column(nullable = false)
@@ -55,10 +58,10 @@ public class VendorDetails {
 	    @Column(updatable = false)
 	    private LocalDateTime createdAt = LocalDateTime.now();
 	    
-	    @Column(unique = true, nullable = false)
+	    @Column( nullable = false)
 	    private long phone; 
 	    
-	    @Column(unique = true, nullable = false)
+	    @Column( nullable = false)
 	    private String email;
 	    
 	    @Column(nullable = false)
@@ -93,6 +96,14 @@ public class VendorDetails {
 		//@PrePersist
 		public void setVendorid(String vendorid) {
 			this.vendorid = vendorid;
+		}
+		
+	    public String getVendorName() {
+			return vendorName;
+		}
+
+		public void setVendorName(String vendorName) {
+			this.vendorName = vendorName;
 		}
 
 		public String getStationName() {
@@ -201,9 +212,10 @@ public class VendorDetails {
 
 		@Override
 		public String toString() {
-			return "VendorDetails [stationID=" + stationID + ", vendorid=" + vendorid + ", stationName=" + stationName
-					+ ", pincode=" + pincode + ", city=" + city + ", landmark=" + landmark + ", state=" + state
-					+ ", slot=" + slot + ", capacity=" + capacity + ", vType=" + vType + ", createdAt=" + createdAt
-					+ ", phone=" + phone + ", email=" + email + "]";
+			return "VendorDetails [stationID=" + stationID + ", vendorid=" + vendorid + ", vendorName=" + vendorName
+					+ ", stationName=" + stationName + ", pincode=" + pincode + ", city=" + city + ", landmark="
+					+ landmark + ", state=" + state + ", slot=" + slot + ", capacity=" + capacity + ", vType=" + vType
+					+ ", createdAt=" + createdAt + ", phone=" + phone + ", email=" + email + ", latitude=" + latitude
+					+ ", longitude=" + longitude + "]";
 		}
 }
