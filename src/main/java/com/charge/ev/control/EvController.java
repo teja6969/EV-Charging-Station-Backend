@@ -76,6 +76,7 @@ public class EvController {
     
     @PutMapping("/updateVendorStationDetails")
     public ResponseEntity<String> vupdate(@RequestBody VendorDetails vu) {
+    	stationid = vu.getstationID();
     	VendorDetails vd=evService.vupdate(stationid).get();
     	evService.deleteSlottype(vd);
     	vd.setCapacity(vu.getCapacity());
@@ -95,7 +96,9 @@ public class EvController {
     	
     	evService.vupdatedeatils(vd);
     	
-    	return new ResponseEntity<String>("Updated successfully",HttpStatus.OK);
+    	return ResponseEntity.status(HttpStatus.OK)
+    			.header("Content-Type", "application/json")
+    			.body("{\"message\": \"Updated successfully\"}"); 
     }
     
 }
