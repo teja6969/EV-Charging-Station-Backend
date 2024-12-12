@@ -101,4 +101,10 @@ public class EvController {
     			.body("{\"message\": \"Updated successfully\"}"); 
     }
     
+    @PostMapping("/uservendorretrieve")
+    public List<VendorDetails> uservendorretrieve(@RequestBody VendorDetails vu){
+    	
+    	return evService.uservendorretrieve(vu.getCity(),vu.getPincode());
+    }
+    
 }

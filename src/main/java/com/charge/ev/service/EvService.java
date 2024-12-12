@@ -72,5 +72,10 @@ public class EvService {
 	public int deleteSlottype(VendorDetails v) {
 		return sl.deleteByStationID(v);
 	}
+
+	public List<VendorDetails> uservendorretrieve(String city, int pincode) {
+		// TODO Auto-generated method stub
+		return vdao.getbycityorpincode (city, pincode);
+	}
 	
 }
