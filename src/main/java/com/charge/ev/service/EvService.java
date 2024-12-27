@@ -1,6 +1,5 @@
 package com.charge.ev.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,6 +90,11 @@ public class EvService {
 	
 	public String getCapacityByVendorId(String vendorid,long stationid) {
 		return vdao.getCapacityByVendorId(vendorid,stationid);
+	}
+
+	public void slotbooking(Reservation rev) {
+		// TODO Auto-generated method stub
+		rd.save(rev);
 	}
 	
 }

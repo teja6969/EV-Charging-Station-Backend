@@ -1,6 +1,5 @@
 package com.charge.ev.entries;
 
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,25 +19,31 @@ public class Reservation {
  	private long rid;
 	
 	@Column(nullable = false)
-    private String cbrand;
+    private String evbrand;
 	
 	@Column(nullable = false)
     private String vendorid;
 	
 	@Column(nullable = false)
+	private long stationID;;
+	
+	@Column(nullable = false)
     private String slotType;
     
 	@Column(nullable = false)
-    private String cmodel;
+    private String evmodel;
 	
 	@Column(nullable = false)
-    private double bstatus;
+    private double batterystatus;
 	
 	@Column(nullable = false)
-    private LocalDateTime sdatet;
+    private double batteryCapacity;
 	
 	@Column(nullable = false)
-    private LocalDateTime edatet;
+    private String sdatet;
+	
+	@Column(nullable = false)
+    private String edatet;
 	
 	@Column(nullable = false)
     private String paymentType;
@@ -54,43 +59,67 @@ public class Reservation {
 		this.rid = rid;
 	}
 
-	public String getCbrand() {
-		return cbrand;
+	public String getEVbrand() {
+		return evbrand;
 	}
 
-	public void setCbrand(String cbrand) {
-		this.cbrand = cbrand;
+	public void setEVbrand(String eVbrand) {
+		evbrand = eVbrand;
 	}
 
-	public String getCmodel() {
-		return cmodel;
+	public String getVendorid() {
+		return vendorid;
 	}
 
-	public void setCmodel(String cmodel) {
-		this.cmodel = cmodel;
+	public void setVendorid(String vendorid) {
+		this.vendorid = vendorid;
 	}
 
-	public double getBstatus() {
-		return bstatus;
+	public String getSlotType() {
+		return slotType;
 	}
 
-	public void setBstatus(double bstatus) {
-		this.bstatus = bstatus;
+	public void setSlotType(String slotType) {
+		this.slotType = slotType;
 	}
 
-	public LocalDateTime getSdatet() {
+	public String getEVmodel() {
+		return evmodel;
+	}
+
+	public void setEVmodel(String eVmodel) {
+		evmodel = eVmodel;
+	}
+
+	public double getBatterystatus() {
+		return batterystatus;
+	}
+
+	public void setBatterystatus(double batterystatus) {
+		this.batterystatus = batterystatus;
+	}
+
+	public double getBatteryCapacity() {
+		return batteryCapacity;
+	}
+
+	public void setBatteryCapacity(double batteryCapacity) {
+		this.batteryCapacity = batteryCapacity;
+	}
+
+	public String getSdatet() {
 		return sdatet;
 	}
 
-	public void setSdatet(LocalDateTime sdatet) {
+	public void setSdatet(String sdatet) {
 		this.sdatet = sdatet;
 	}
 
-	public LocalDateTime getEdatet() {
+	public String getEdatet() {
 		return edatet;
 	}
 
-	public void setEdatet(LocalDateTime edatet) {
+	public void setEdatet(String edatet) {
 		this.edatet = edatet;
 	}
 
@@ -110,11 +139,20 @@ public class Reservation {
 		this.status = status;
 	}
 
+	public long getStationID() {
+		return stationID;
+	}
+
+	public void setStationID(long stationID) {
+		this.stationID = stationID;
+	}
+
 	@Override
 	public String toString() {
-		return "Reservation [rid=" + rid + ", cbrand=" + cbrand + ", cmodel=" + cmodel + ", bstatus=" + bstatus
-				+ ", sdatet=" + sdatet + ", edatet=" + edatet + ", paymentType=" + paymentType + ", status=" + status
-				+ "]";
-	}
-	
-}
+		return "Reservation [rid=" + rid + ", EVbrand=" + evbrand + ", vendorid=" + vendorid + ", stationID="
+				+ stationID + ", slotType=" + slotType + ", EVmodel=" + evmodel + ", batterystatus=" + batterystatus
+				+ ", batteryCapacity=" + batteryCapacity + ", sdatet=" + sdatet + ", edatet=" + edatet
+				+ ", paymentType=" + paymentType + ", status=" + status + "]";
+	}   
+    
+    }
