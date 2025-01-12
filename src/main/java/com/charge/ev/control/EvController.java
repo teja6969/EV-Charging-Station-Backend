@@ -6,19 +6,24 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
+import com.charge.ev.EmailService;
 import com.charge.ev.entries.Entries;
 import com.charge.ev.entries.Reservation;
 import com.charge.ev.entries.VendorDetails;
 import com.charge.ev.service.EvService;
+
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/api/auth")
 public class EvController {
     @Autowired
     EvService evService;
-    
+    @Autowired
+    EmailService em;
     String userid;
     String email;
     long stationid;
@@ -38,7 +43,7 @@ public class EvController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody Entries register) {
+    public ResponseEntity<?> registration(@RequestBody Entries register) throws MailException, MessagingException {
         if (evService.registercheck(register.getEmail()) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .header("Content-Type", "application/json")
@@ -48,6 +53,16 @@ public class EvController {
         	userid=register.getUserId();
         	email=register.getEmail();
         	//Email should be sent once registered
+        	em.sendEmail(email, "Welcome to our ChargeEV!", 
+        		    "Hello " + register.getUsername() + ",<br><br>"
+        		    + "We are excited to have you join our community. Here's how we can help you:<br><br>"
+        		    + "1. Locate and reserve EV charging stations easily and quickly.<br>"
+        		    + "2. Get real-time updates on charging station availability.<br>"
+        		    + "3. Enjoy a seamless and convenient charging experience.<br><br>"
+        		    + "Your User ID: " + userid + "<br><br>"
+        		    + "Feel free to explore and make the most of our platform. If you have any questions or need support, we're just a click away.<br><br>"
+        		    + "Thank you for choosing us to power your journey. Drive electric, drive the future!<br><br>"
+        		    + "Best regards,<br>ChargeEV");
             return ResponseEntity.status(HttpStatus.CREATED)
                     .header("Content-Type", "application/json")
                     .body("{\"message\": \"User is registered successfully\"}"); 
