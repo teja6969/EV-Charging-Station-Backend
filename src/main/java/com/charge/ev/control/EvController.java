@@ -63,8 +63,7 @@ public class EvController {
         		    + "Feel free to explore and make the most of our platform. If you have any questions or need support, we're just a click away.<br><br>"
         		    + "Thank you for choosing us to power your journey. Drive electric, drive the future!<br><br>"
         		    + "Best regards,<br>ChargeEV");
- 
-        			 return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.CREATED)
                     .header("Content-Type", "application/json")
                     .body("{\"message\": \"User is registered successfully\"}"); 
 
