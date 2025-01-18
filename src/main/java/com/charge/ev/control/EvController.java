@@ -131,32 +131,58 @@ public class EvController {
     }
     
     @PostMapping("/predictTime")
-    public String calculateChargingTime(
-		@RequestBody
-		Map<String, Object> uicalcharge)
-{
-	String vendorid = (String) uicalcharge.get("vendorid");
-	int stationid = (int) uicalcharge.get("stationid");
-	double batteryCapacity = (double) uicalcharge.get("batterycapacity");
-	double currentBattery = (double) uicalcharge.get("currentcharge");
-	System.out.println(batteryCapacity+"  "+currentBattery);
-	double chargingRate=Double.parseDouble(evService.getCapacityByVendorId(vendorid,stationid));
-    // Validate inputs
-    if (currentBattery < 0 || currentBattery > 100 || batteryCapacity <= 0 || chargingRate <= 0) {
-        return "Invalid input. Please enter valid values.";
+    public ResponseEntity<String> calculateChargingTime(@RequestBody Map<String, Object> uicalcharge) {
+        try {
+            String vendorid = (String) uicalcharge.get("vendorid");
+            int stationid = (int) uicalcharge.get("stationid");
+            
+            // Safely convert to Double
+            double batteryCapacity = ((Number) uicalcharge.get("batterycapacity")).doubleValue();
+            double currentBattery = ((Number) uicalcharge.get("currentcharge")).doubleValue();
+            
+            System.out.println(batteryCapacity + "  " + currentBattery);
+            double chargingRate = Double.parseDouble(evService.getCapacityByVendorId(vendorid, stationid));
+
+            // Validate inputs
+            if (currentBattery < 0 || currentBattery > 100 || batteryCapacity <= 0 || chargingRate <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .header("Content-Type", "application/json")
+                        .body("{\"message\": \"Invalid input. Please enter valid values.\"}");
+            }
+
+            // Calculate the remaining battery percentage to reach 100%
+            double remainingPercentage = 100 - currentBattery;
+
+            // Calculate the remaining energy needed in kWh
+            double remainingEnergy = (remainingPercentage / 100) * batteryCapacity;
+
+            // Calculate the time required to charge in hours
+            double chargingTimeHours = remainingEnergy / chargingRate;
+
+            // Convert time to hours and minutes
+            int hours = (int) chargingTimeHours;
+            int minutes = (int) ((chargingTimeHours - hours) * 60);
+
+            // Create JSON response
+            String responseBody = String.format(
+                    "{\"message\": \"Time required to fully charge the battery: %d hours and %d minutes.\"}",
+                    hours, minutes);
+
+            // Return ResponseEntity with JSON body
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header("Content-Type", "application/json")
+                    .body(responseBody);
+
+        } catch (Exception e) {
+            // Handle errors
+            String errorMessage = String.format("{\"message\": \"Error processing the request: %s\"}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(errorMessage);
+        }
     }
-    // Calculate the remaining battery percentage to reach 100%
-    double remainingPercentage = 100 - currentBattery;
-    // Calculate the remaining energy needed in kWh
-    double remainingEnergy = (remainingPercentage / 100) * batteryCapacity;
-    // Calculate the time required to charge in hours
-    double chargingTimeHours = remainingEnergy / chargingRate;
-    // Convert time to hours and minutes
-    int hours = (int) chargingTimeHours;
-    int minutes = (int) ((chargingTimeHours - hours) * 60);
-    // Return the result as a string
-    return "Time required to fully charge the battery: " + hours + " hours and " + minutes + " minutes.";
-}
+
+
 
   @PostMapping("/slotbooking")
    public ResponseEntity<String> slotbooking(@RequestBody Reservation rev){
