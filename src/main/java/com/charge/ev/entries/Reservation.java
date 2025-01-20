@@ -51,6 +51,18 @@ public class Reservation {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = false)
+    private String userId;
+    
+    
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	public long getRid() {
 		return rid;
 	}

@@ -96,5 +96,27 @@ public class EvService {
 		// TODO Auto-generated method stub
 		rd.save(rev);
 	}
+
+	public List<Reservation> userbookinghistory(String userId) {
+		// TODO Auto-generated method stub
+		return rd.findByUserId(userId);
+	}
+
+	public List<Reservation> vendorbookinghistrory(String vendorid) {
+		// TODO Auto-generated method stub
+		return rd.findByVendorid(vendorid);
+	}
+
+	public Entries retriveuserdetails(String userid) {
+		// TODO Auto-generated method stub
+		return evDao.findByUserId(userid);
+	}
+
+	public void userupdatepassword(String newPassword, String userid) {
+		// TODO Auto-generated method stub
+		Entries e = (Entries) evDao.findByUserId(userid);
+		e.setPassword(newPassword);
+		 evDao.save(e);
+	}
 	
 }
