@@ -119,4 +119,11 @@ public class EvService {
 		 evDao.save(e);
 	}
 	
+	public Entries getemailbyuserID(String userID) {
+		return evDao.findByUserId(userID);
+	}
+	
+	public VendorDetails getemailbyvendorID(String vendorid) {
+		return vdao.findbyvendorID(vendorid);
+	}
 }

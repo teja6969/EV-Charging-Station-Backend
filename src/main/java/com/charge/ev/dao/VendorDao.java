@@ -22,4 +22,7 @@ public interface VendorDao extends CrudRepository<VendorDetails, Long> {
 	@Query(value="select capacity from vd where vendorid=?1 and stationid=?2",nativeQuery = true)
 	public String getCapacityByVendorId(String vendorid,long stationid);
 	
+	@Query(value = "select e.* from vd e where e.VENDORID=?1",nativeQuery = true)
+    VendorDetails findbyvendorID(String vendorid);
+	
 }

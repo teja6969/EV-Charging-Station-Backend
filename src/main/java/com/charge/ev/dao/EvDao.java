@@ -16,4 +16,5 @@ public interface EvDao extends CrudRepository<Entries, Long> {
     String existsByEmail(String Email);
     
     public Entries findByUserId(String userId);
+    
 }
