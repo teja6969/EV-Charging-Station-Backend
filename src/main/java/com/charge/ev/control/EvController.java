@@ -16,6 +16,7 @@ import com.charge.ev.entries.VendorDetails;
 import com.charge.ev.service.EvService;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -185,12 +186,59 @@ public class EvController {
 
 
   @PostMapping("/slotbooking")
-   public ResponseEntity<String> slotbooking(@RequestBody Reservation rev){
+   public ResponseEntity<String> slotbooking(@RequestBody Reservation rev, HttpSession session) throws MailException, MessagingException{
+	  rev.setUserId("EV002");
+	  rev.setStationID(1);
 	  System.out.println(rev);
 	  evService.slotbooking(rev);
+	//Email should be sent once Slot Booked
+	  String uname = evService.getemailbyuserID(rev.getUserId()).getUsername();
+	  String vname = evService.getemailbyvendorID(rev.getVendorid()).getVendorName() ;
+	  em.sendEmail(evService.getemailbyuserID(rev.getUserId()).getEmail(), 
+	            "Your ChargeEV Slot Booking Confirmation!", 
+	            "Hello " + uname + ",<br><br>"
+	            + "We are pleased to confirm your EV charging slot booking. Below are your booking details:<br><br>"
+	            + "<strong>User ID:</strong> " + rev.getUserId() + "<br>"
+	            + "<strong>Station ID:</strong> " + rev.getStationID() + "<br><br>"
+	            + "Please arrive at the station on time to ensure a smooth charging experience. You can manage your bookings and get live updates through our platform.<br><br>"
+	            + "If you have any questions or need assistance, feel free to reach out to our support team.<br><br>"
+	            + "Thank you for choosing ChargeEV for your electric journey!<br><br>"
+	            + "Best regards,<br>ChargeEV Team");
+	  em.sendEmail(evService.getemailbyvendorID(rev.getVendorid()).getEmail(), 
+	            "New ChargeEV Slot Booking Notification!", 
+	            "Hello " + vname + ",<br><br>"
+	            + "A new slot has been successfully booked at your charging station. Here are the booking details:<br><br>"
+	            + "<strong>User ID:</strong> " + rev.getUserId() + "<br>"
+	            + "<strong>Station ID:</strong> " + rev.getStationID() + "<br><br>"
+	            + "Please ensure the station is ready for the user's arrival to provide a seamless charging experience. "
+	            + "You can manage bookings and track station activity through our platform.<br><br>"
+	            + "If you have any questions or need assistance, feel free to reach out to our support team.<br><br>"
+	            + "Thank you for partnering with ChargeEV to power the future of electric mobility!<br><br>"
+	            + "Best regards,<br>ChargeEV Team");
   	return ResponseEntity.status(HttpStatus.OK)
-  		//Email should be sent once Slot Booked
   			.header("Content-Type", "application/json")
   			.body("{\"message\": \"Slot Booked Successfully\"}"); 
+  }
+  
+  @GetMapping("/userbookinghistory")
+	  public List<Reservation> userbookinghistrory(HttpSession session){
+		  String userId = (String) session.getAttribute("userid");
+		  return evService.userbookinghistory("EV002");
+	  }
+  @GetMapping("/vendorbookinghistory")
+  public List<Reservation> vendorbookinghistrory(HttpSession session){
+	  String vendorid = (String) session.getAttribute("vendorid");
+	  return evService.vendorbookinghistrory("EVD001");
+  }
+  @GetMapping("/retriveuserdetails")
+  public Entries retriveuserdetails(HttpSession session) {
+  	return evService.retriveuserdetails("EV002");
+  }
+  @PutMapping("/validateandupdatepassword")
+   public void updatepassowrd(@RequestBody Map<String,String> up, HttpSession session) {
+	  String userId = (String) session.getAttribute("userid");
+	  String newPassword = up.get("newPassword");
+	  evService.userupdatepassword(newPassword, "EV002");
+	  
   }
 }
