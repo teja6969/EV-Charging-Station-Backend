@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.charge.ev.EmailService;
 import com.charge.ev.entries.Entries;
+import com.charge.ev.entries.Feedback;
 import com.charge.ev.entries.Reservation;
 import com.charge.ev.entries.VendorDetails;
 import com.charge.ev.service.EvService;
@@ -30,11 +31,13 @@ public class EvController {
     long stationid;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Entries loginRequest) {
+    public ResponseEntity<?> login(@RequestBody Entries loginRequest, HttpSession session) {
         Entries user = evService.loginService(loginRequest.getEmail(), loginRequest.getPassword());
         if (user != null) {
         	userid=user.getUserId();
           	email=loginRequest.getEmail();
+          	session.setAttribute("userid", userid);
+          	session.setAttribute("vendorid", userid);
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -117,7 +120,6 @@ public class EvController {
     
     @PostMapping("/uservendorretrieve")
     public List<VendorDetails> uservendorretrieve(@RequestBody VendorDetails vu){
-    	
     	return evService.uservendorretrieve(vu.getCity(),vu.getPincode());
     }
     
@@ -187,8 +189,8 @@ public class EvController {
 
   @PostMapping("/slotbooking")
    public ResponseEntity<String> slotbooking(@RequestBody Reservation rev, HttpSession session) throws MailException, MessagingException{
-	  rev.setUserId("EV002");
-	  rev.setStationID(1);
+	  //rev.setUserId("EV002");
+	  //rev.setStationID(1);
 	  System.out.println(rev);
 	  evService.slotbooking(rev);
 	//Email should be sent once Slot Booked
@@ -223,22 +225,33 @@ public class EvController {
   @GetMapping("/userbookinghistory")
 	  public List<Reservation> userbookinghistrory(HttpSession session){
 		  String userId = (String) session.getAttribute("userid");
-		  return evService.userbookinghistory("EV002");
+		  return evService.userbookinghistory(userId);
 	  }
   @GetMapping("/vendorbookinghistory")
   public List<Reservation> vendorbookinghistrory(HttpSession session){
 	  String vendorid = (String) session.getAttribute("vendorid");
-	  return evService.vendorbookinghistrory("EVD001");
+	  return evService.vendorbookinghistrory(vendorid);
   }
   @GetMapping("/retriveuserdetails")
   public Entries retriveuserdetails(HttpSession session) {
-  	return evService.retriveuserdetails("EV002");
+	String userId = (String) session.getAttribute("userid");
+  	return evService.retriveuserdetails(userId);
   }
   @PutMapping("/validateandupdatepassword")
    public void updatepassowrd(@RequestBody Map<String,String> up, HttpSession session) {
 	  String userId = (String) session.getAttribute("userid");
 	  String newPassword = up.get("newPassword");
-	  evService.userupdatepassword(newPassword, "EV002");
+	  evService.userupdatepassword(newPassword, userId); 
+  }
+  @PostMapping("/feedback")
+  public void feedback(@RequestBody Feedback fb, HttpSession session) {
+	  String userId = (String) session.getAttribute("userid");
+	  fb.setUserId(userId);
+	  evService.feedback(fb);
+  }
+  @PostMapping("/retrivefeedback")
+  public List<Feedback> retrivefeedback(@RequestBody Map<String, Long> rf){
+	return evService.retrivefeedback((Long)rf.get("stationID"));
 	  
   }
 }

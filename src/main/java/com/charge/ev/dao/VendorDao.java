@@ -25,4 +25,6 @@ public interface VendorDao extends CrudRepository<VendorDetails, Long> {
 	@Query(value = "select e.* from vd e where e.VENDORID=?1",nativeQuery = true)
     VendorDetails findbyvendorID(String vendorid);
 	
+	@Query(value = "select e.* from vd e where e.VENDORID=?1 and e.STATIONID=?2",nativeQuery = true)
+	VendorDetails findByVendoridAndStationID(String vendorid, String stationID);
 }
