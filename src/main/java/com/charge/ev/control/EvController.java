@@ -189,13 +189,16 @@ public class EvController {
 
   @PostMapping("/slotbooking")
    public ResponseEntity<String> slotbooking(@RequestBody Reservation rev, HttpSession session) throws MailException, MessagingException{
-	  //rev.setUserId("EV002");
 	  //rev.setStationID(1);
 	  System.out.println(rev);
 	  evService.slotbooking(rev);
 	//Email should be sent once Slot Booked
+	  
 	  String uname = evService.getemailbyuserID(rev.getUserId()).getUsername();
-	  String vname = evService.getemailbyvendorID(rev.getVendorid()).getVendorName() ;
+	  System.out.println("UNAME" + uname);
+	  String stationId = String.valueOf(rev.getStationID());
+	  String vname = evService.getemailbyvendorID(rev.getVendorid(), stationId).getVendorName();
+	  System.out.println("NAME" + vname);
 	  em.sendEmail(evService.getemailbyuserID(rev.getUserId()).getEmail(), 
 	            "Your ChargeEV Slot Booking Confirmation!", 
 	            "Hello " + uname + ",<br><br>"
@@ -206,7 +209,7 @@ public class EvController {
 	            + "If you have any questions or need assistance, feel free to reach out to our support team.<br><br>"
 	            + "Thank you for choosing ChargeEV for your electric journey!<br><br>"
 	            + "Best regards,<br>ChargeEV Team");
-	  em.sendEmail(evService.getemailbyvendorID(rev.getVendorid()).getEmail(), 
+	  em.sendEmail(evService.getemailbyvendorID(rev.getVendorid(), stationId).getEmail(), 
 	            "New ChargeEV Slot Booking Notification!", 
 	            "Hello " + vname + ",<br><br>"
 	            + "A new slot has been successfully booked at your charging station. Here are the booking details:<br><br>"
@@ -222,31 +225,32 @@ public class EvController {
   			.body("{\"message\": \"Slot Booked Successfully\"}"); 
   }
   
-  @GetMapping("/userbookinghistory")
-	  public List<Reservation> userbookinghistrory(HttpSession session){
-		  String userId = (String) session.getAttribute("userid");
+  @PostMapping("/userbookinghistory")
+	  public List<Reservation> userbookinghistrory(@RequestBody Map<String,String> id, HttpSession session){
+		  String userId = id.get("id");
 		  return evService.userbookinghistory(userId);
 	  }
-  @GetMapping("/vendorbookinghistory")
-  public List<Reservation> vendorbookinghistrory(HttpSession session){
-	  String vendorid = (String) session.getAttribute("vendorid");
+  @PostMapping("/vendorbookinghistory")
+  public List<Reservation> vendorbookinghistrory(@RequestBody Map<String,String> data, HttpSession session){
+	  String vendorid = (String) data.get("vendorid");
 	  return evService.vendorbookinghistrory(vendorid);
-  }
-  @GetMapping("/retriveuserdetails")
-  public Entries retriveuserdetails(HttpSession session) {
-	String userId = (String) session.getAttribute("userid");
-  	return evService.retriveuserdetails(userId);
   }
   @PutMapping("/validateandupdatepassword")
    public void updatepassowrd(@RequestBody Map<String,String> up, HttpSession session) {
-	  String userId = (String) session.getAttribute("userid");
+	  String userId = up.get("userid");
 	  String newPassword = up.get("newPassword");
 	  evService.userupdatepassword(newPassword, userId); 
   }
+  
+  @PostMapping("/retrivelatandlong")
+  public VendorDetails retrivelatandlong (@RequestBody Map<String,String> data, HttpSession session) {
+	  String vendorid = (String) data.get("vendorid");
+	  String stationid = (String) data.get("stationid");
+	  return evService.retrivelatandlong(vendorid,stationid);
+  }
+  
   @PostMapping("/feedback")
   public void feedback(@RequestBody Feedback fb, HttpSession session) {
-	  String userId = (String) session.getAttribute("userid");
-	  fb.setUserId(userId);
 	  evService.feedback(fb);
   }
   @PostMapping("/retrivefeedback")
@@ -254,4 +258,5 @@ public class EvController {
 	return evService.retrivefeedback((Long)rf.get("stationID"));
 	  
   }
+  
 }

@@ -128,8 +128,8 @@ public class EvService {
 		return evDao.findByUserId(userID);
 	}
 	
-	public VendorDetails getemailbyvendorID(String vendorid) {
-		return vdao.findbyvendorID(vendorid);
+	public VendorDetails getemailbyvendorID(String vendorid, String stationid) {
+		return vdao.findByVendoridAndStationID(vendorid, stationid);
 	}
 
 	public VendorDetails retrivelatandlong(String vendorid, String stationid) {
