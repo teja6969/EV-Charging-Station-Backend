@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.charge.ev.dao.EvDao;
+import com.charge.ev.dao.FeedbackDao;
 import com.charge.ev.dao.ReservationDao;
 import com.charge.ev.dao.SlotDao;
 import com.charge.ev.dao.VendorDao;
 import com.charge.ev.entries.Entries;
+import com.charge.ev.entries.Feedback;
 import com.charge.ev.entries.Reservation;
 import com.charge.ev.entries.SlotType;
 import com.charge.ev.entries.VendorDetails;
@@ -29,6 +31,9 @@ public class EvService {
     
     @Autowired
     ReservationDao rd;
+    
+    @Autowired
+    FeedbackDao fd;
     
     public Entries loginService(String email, String password) {
         return evDao.findByEmailAndPassword(email, password);
@@ -125,5 +130,20 @@ public class EvService {
 	
 	public VendorDetails getemailbyvendorID(String vendorid) {
 		return vdao.findbyvendorID(vendorid);
+	}
+
+	public VendorDetails retrivelatandlong(String vendorid, String stationid) {
+		// TODO Auto-generated method stub
+		return vdao.findByVendoridAndStationID(vendorid, stationid);
+	}
+
+	public void feedback(Feedback fb) {
+		fd.save(fb);
+		
+	}
+
+	public List<Feedback> retrivefeedback(long stationID) {
+		// TODO Auto-generated method stub
+		return fd.findByStationID(stationID);
 	}
 }
