@@ -256,7 +256,16 @@ public class EvController {
   @PostMapping("/retrivefeedback")
   public List<Feedback> retrivefeedback(@RequestBody Map<String, Long> rf){
 	return evService.retrivefeedback((Long)rf.get("stationID"));
-	  
   }
-  
+  @PostMapping("/bookingstatusupdate")
+  public void bookingstatusupdate(@RequestBody Map<String, String> bsu){
+	  long rid = Long.parseLong((String)bsu.get("rid"));
+	  String status = (String)bsu.get("status");
+	 evService.bookingstatusupdate(rid,status);
+  }
+  @PostMapping("/slotstatus")
+  public List<Reservation> slotstatus(@RequestBody Map<String, Long> ss) {
+	  long stationid = (Long)ss.get("stationid");
+	 return evService.slotstatus(stationid);
+  }
 }

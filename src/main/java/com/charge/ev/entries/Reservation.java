@@ -25,7 +25,7 @@ public class Reservation {
     private String vendorid;
 	
 	@Column(nullable = false)
-	private long stationID;;
+	private long stationID;
 	
 	@Column(nullable = false)
     private String slotType;

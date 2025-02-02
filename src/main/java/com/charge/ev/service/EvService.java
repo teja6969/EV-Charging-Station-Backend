@@ -146,4 +146,14 @@ public class EvService {
 		// TODO Auto-generated method stub
 		return fd.findByStationID(stationID);
 	}
+
+	public void bookingstatusupdate(Long rid, String status) {
+		// TODO Auto-generated method stub
+		rd.updateStatus(status, rid);
+	}
+
+	public List<Reservation> slotstatus(long stationid) {
+		// TODO Auto-generated method stub
+		return rd.findByStationID(stationid);
+	}
 }
